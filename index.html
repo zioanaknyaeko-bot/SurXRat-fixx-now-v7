@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SURXRAT FINAL - NEW FEATURES</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #0a0f0f; 
+            color: #00ff9d; 
+            font-family: 'Courier New', monospace;
+            padding: 10px;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        
+        .header { 
+            border: 3px solid #ff0066; 
+            padding: 15px; 
+            margin-bottom: 15px;
+            text-align: center;
+            background: linear-gradient(145deg, #1a1f1f 0%, #0a0f0f 100%);
+            border-radius: 15px;
+        }
+        .header h1 { 
+            font-size: 36px; 
+            color: #ff0066; 
+            text-shadow: 0 0 10px #ff0066;
+        }
+        .header .sub { 
+            color: #00ff9d; 
+            font-size: 12px; 
+        }
+        
+        .tab-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+            position: sticky;
+            top: 0;
+            background: #0a0f0f;
+            padding: 10px 0;
+            z-index: 100;
+        }
+        .tab-btn {
+            flex: 1 0 auto;
+            min-width: 70px;
+            padding: 12px 3px;
+            background: #0a0f0f;
+            border: 2px solid #00ff9d;
+            color: #00ff9d;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .tab-btn.active {
+            background: #00ff9d;
+            color: #0a0f0f;
+        }
+        
+        .panel {
+            border: 2px solid #00ff9d;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #1a1f1f;
+            border-radius: 15px;
+            display: none;
+        }
+        .panel.active-panel { display: block; }
+        .panel h2 { 
+            color: #ff0066; 
+            margin-bottom: 15px; 
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+        
+        /* CAMERA PREVIEW */
+        .camera-preview {
+            width: 100%;
+            height: 250px;
+            background: #0a0f0f;
+            border: 2px solid #00ff9d;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        #cameraFeed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .zoom-control {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 5px;
+            border-radius: 20px;
+            display: flex;
+            gap: 5px;
+        }
+        .zoom-btn {
+            background: #00ff9d;
+            color: #0a0f0f;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .button-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .button-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .action-btn {
+            padding: 12px 3px;
+            background: #0a0f0f;
+            border: 2px solid #00ff9d;
+            color: #00ff9d;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .action-btn.red {
+            border-color: #ff0066;
+            color: #ff0066;
+        }
+        .action-btn.yellow {
+            border-color: #ff9900;
+            color: #ff9900;
+        }
+        
+        .status-box {
+            background: #0a0f0f;
+            border: 1px solid #333;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            background: #0a0f0f;
+            border: 2px solid #00ff9d;
+            color: #00ff9d;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .data-container {
+            background: #0a0f0f;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+        
+        .console {
+            border: 2px solid #00ff9d;
+            padding: 15px;
+            background: #1a1f1f;
+            border-radius: 15px;
+            margin-top: 15px;
+        }
+        .console-log {
+            height: 100px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            padding: 10px;
+            background: #0a0f0f;
+            font-size: 11px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SURXRAT FINAL</h1>
+            <div class="sub">🔥 NEW FEATURES - 100% MOBILE FRIENDLY 🔥</div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('camera')">📸 CAM++</button>
+            <button class="tab-btn" onclick="switchTab('overlay')">💬 OVERLAY</button>
+            <button class="tab-btn" onclick="switchTab('audio')">🎤 AUDIO++</button>
+            <button class="tab-btn" onclick="switchTab('tools')">🔧 TOOLS++</button>
+            <button class="tab-btn" onclick="switchTab('device')">📱 DEVICE</button>
+            <button class="tab-btn" onclick="switchTab('qr')">📲 QR</button>
+        </div>
+
+        <!-- ========== PANEL CAMERA++ ========== -->
+        <div id="cameraPanel" class="panel active-panel">
+            <h2>📸 CAMERA PRO</h2>
+            
+            <div class="camera-preview">
+                <video id="cameraFeed" autoplay playsinline></video>
+                <div class="zoom-control">
+                    <button class="zoom-btn" onclick="cameraZoom(0.5)">0.5x</button>
+                    <button class="zoom-btn" onclick="cameraZoom(1)">1x</button>
+                    <button class="zoom-btn" onclick="cameraZoom(2)">2x</button>
+                </div>
+            </div>
+            
+            <div class="button-grid-4">
+                <button class="action-btn" onclick="startCamera('front')">📱 FRONT</button>
+                <button class="action-btn" onclick="startCamera('rear')">📷 REAR</button>
+                <button class="action-btn red" onclick="stopCamera()">⏹️ STOP</button>
+                <button class="action-btn" onclick="capturePhoto()">📸 FOTO</button>
+                <button class="action-btn" onclick="toggleTorch()" id="torchBtn">🔦 TORCH</button>
+                <button class="action-btn" onclick="setTimer()">⏱️ TIMER 3s</button>
+                <button class="action-btn" onclick="toggleMirror()">🪞 MIRROR</button>
+                <button class="action-btn yellow" onclick="flashlightBlink()" id="blinkBtn">✨ BLINK</button>
+            </div>
+            
+            <div class="status-box" id="cameraStatus">
+                Camera: Ready | Zoom: 1x
+            </div>
+        </div>
+
+        <!-- ========== PANEL OVERLAY ========== -->
+        <div id="overlayPanel" class="panel">
+            <h2>💬 OVERLAY</h2>
+            
+            <input type="text" id="overlayText" class="input-field" placeholder="Teks pesan..." value="SURXRAT">
+            
+            <div class="button-grid-3">
+                <button class="action-btn" onclick="showOverlay()">📤 OVERLAY</button>
+                <button class="action-btn" onclick="showNotification()">🔔 NOTIF</button>
+                <button class="action-btn" onclick="copyToClipboard()">📋 COPY</button>
+            </div>
+            
+            <div class="status-box" id="clipboardInfo">
+                Clipboard: -
+            </div>
+        </div>
+
+        <!-- ========== PANEL AUDIO++ ========== -->
+        <div id="audioPanel" class="panel">
+            <h2>🎤 AUDIO PRO</h2>
+            
+            <input type="text" id="ttsText" class="input-field" placeholder="Teks ke suara..." value="HALO">
+            
+            <div class="button-grid-4">
+                <button class="action-btn" onclick="speakText()">🔊 TTS</button>
+                <button class="action-btn" onclick="playBeep()">📢 BEEP</button>
+                <button class="action-btn" onclick="playAlarm()">🚨 ALARM</button>
+                <button class="action-btn" onclick="playNotification()">🔔 NOTIF</button>
+                <button class="action-btn" onclick="startRecording()">⏺️ REC</button>
+                <button class="action-btn red" onclick="stopRecording()">⏹️ STOP</button>
+                <button class="action-btn" onclick="playLastAudio()">🔊 PLAY</button>
+                <button class="action-btn yellow" onclick="toggleEcho()" id="echoBtn">🔊 ECHO</button>
+            </div>
+            
+            <audio id="audioPlayer" controls style="width:100%; margin-top:10px; display:none;"></audio>
+            
+            <div class="button-grid-3" style="margin-top:10px;">
+                <button class="action-btn" onclick="startSpeechRecognition()">🎤 SPEECH</button>
+                <button class="action-btn red" onclick="stopSpeechRecognition()">⏹️ STOP</button>
+                <button class="action-btn" onclick="voiceChanger()">🎭 VOICE</button>
+            </div>
+            <div class="data-container" id="speechResult">Hasil speech akan muncul di sini...</div>
+        </div>
+
+        <!-- ========== PANEL TOOLS++ ========== -->
+        <div id="toolsPanel" class="panel">
+            <h2>🔧 TOOLS PRO</h2>
+            
+            <h3 style="color:#00ff9d;">📍 GPS + MAPS</h3>
+            <div class="button-grid-3">
+                <button class="action-btn" onclick="getLocation()">📍 GET</button>
+                <button class="action-btn" onclick="startLiveLocation()">🔄 LIVE</button>
+                <button class="action-btn red" onclick="stopLiveLocation()">⏹️ STOP</button>
+            </div>
+            <div class="data-container" id="locationResult">📍 Lokasi akan muncul di sini</div>
+            
+            <h3 style="color:#00ff9d;">🧭 SENSORS</h3>
+            <div class="button-grid-4">
+                <button class="action-btn" onclick="startCompass()">🧭 COMPASS</button>
+                <button class="action-btn" onclick="stopCompass()">⏹️ STOP</button>
+                <button class="action-btn" onclick="startAltimeter()">📈 ALTIMETER</button>
+                <button class="action-btn" onclick="stopAltimeter()">⏹️ STOP</button>
+            </div>
+            <div class="status-box" id="sensorData">
+                Compass: -° | Altitude: - m
+            </div>
+            
+            <h3 style="color:#00ff9d;">⚡ POWER TOOLS</h3>
+            <div class="button-grid-4">
+                <button class="action-btn" onclick="flashlightOn()">🔦 ON</button>
+                <button class="action-btn red" onclick="flashlightOff()">🔦 OFF</button>
+                <button class="action-btn yellow" onclick="flashlightBlink()" id="toolsBlinkBtn">✨ BLINK</button>
+                <button class="action-btn" onclick="vibratePattern()">📳 VIBRATE</button>
+            </div>
+        </div>
+
+        <!-- ========== PANEL DEVICE ========== -->
+        <div id="devicePanel" class="panel">
+            <h2>📱 DEVICE</h2>
+            
+            <div class="status-box">
+                <div class="info-row">🔋 Battery: <span id="batteryLevel">-</span></div>
+                <div class="info-row">⚡ Charging: <span id="batteryCharging">-</span></div>
+                <div class="info-row">🌐 Network: <span id="networkType">-</span></div>
+                <div class="info-row">📶 Online: <span id="onlineStatus">-</span></div>
+                <div class="info-row">📱 Platform: <span id="platform">-</span></div>
+                <div class="info-row">📐 Screen: <span id="screenSize">-</span></div>
+                <div class="info-row">🧭 Orientation: <span id="orientation">-</span></div>
+                <div class="info-row">💾 RAM: <span id="ramInfo">-</span></div>
+                <div class="info-row">📦 Storage: <span id="storageInfo">-</span></div>
+            </div>
+            
+            <div class="button-grid-4">
+                <button class="action-btn" onclick="getPublicIP()">🌐 IP</button>
+                <button class="action-btn" onclick="vibratePattern()">📳 VIBRATE</button>
+                <button class="action-btn" onclick="refreshDeviceInfo()">🔄 REFRESH</button>
+                <button class="action-btn" onclick="getDeviceSpecs()">📊 SPECS</button>
+            </div>
+        </div>
+
+        <!-- ========== PANEL QR ========== -->
+        <div id="qrPanel" class="panel">
+            <h2>📲 QR CODE</h2>
+            
+            <input type="text" id="qrText" class="input-field" placeholder="Teks untuk QR..." value="SURXRAT FINAL">
+            
+            <div class="button-grid-3">
+                <button class="action-btn" onclick="generateQR()">🔲 GENERATE</button>
+                <button class="action-btn" onclick="downloadQR()">💾 DOWNLOAD</button>
+                <button class="action-btn red" onclick="clearQR()">🗑️ CLEAR</button>
+            </div>
+            
+            <div id="qrContainer" style="text-align:center;"></div>
+        </div>
+
+        <!-- CONSOLE LOG -->
+        <div class="console">
+            <div class="console-log" id="consoleLog">
+                <div class="log-info">[SYSTEM] SURXRAT FINAL - NEW FEATURES</div>
+                <div class="log-info">[INFO] 6 Panels - 40+ Fitur - 100% Mobile</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Copyright © YutoriLiona • Tracker V13.0 • FINAL EDITION
+        </div>
+    </div>
+
+    <!-- OVERLAY CONTAINER -->
+    <div id="overlayContainer"></div>
+
+    <script>
+        // ==================== LOGGING ====================
+        function addLog(msg, type = 'info') {
+            const log = document.getElementById('consoleLog');
+            const color = type === 'error' ? '#ff0066' : (type === 'success' ? '#00ff9d' : '#888');
+            log.innerHTML += `<div style="color:${color}">[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // ==================== TAB SWITCH ====================
+        function switchTab(tab) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active-panel'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tab + 'Panel').classList.add('active-panel');
+            
+            const btns = document.querySelectorAll('.tab-btn');
+            for (let btn of btns) {
+                if (btn.textContent.includes(
+                    tab === 'camera' ? 'CAM' :
+                    tab === 'overlay' ? 'OVERLAY' :
+                    tab === 'audio' ? 'AUDIO' :
+                    tab === 'tools' ? 'TOOLS' :
+                    tab === 'device' ? 'DEVICE' : 'QR'
+                )) {
+                    btn.classList.add('active');
+                }
+            }
+        }
+
+        // ==================== CAMERA PRO ====================
+        let cameraStream = null;
+        let currentCam = 'front';
+        let currentZoom = 1;
+        let mirrorMode = false;
+        let torchState = false;
+
+        async function startCamera(type) {
+            try {
+                if (cameraStream) stopCamera();
+                
+                cameraStream = await navigator.mediaDevices.getUserMedia({
+                    video: { 
+                        facingMode: type === 'front' ? 'user' : 'environment',
+                        zoom: currentZoom
+                    }
+                });
+                
+                const video = document.getElementById('cameraFeed');
+                video.srcObject = cameraStream;
+                video.style.transform = mirrorMode ? 'scaleX(-1)' : 'none';
+                currentCam = type;
+                
+                addLog(`✅ Camera ${type} aktif`, 'success');
+                updateCameraStatus();
+                
+            } catch (err) {
+                addLog('❌ Camera error: ' + err.message, 'error');
+            }
+        }
+
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(t => t.stop());
+                cameraStream = null;
+                document.getElementById('cameraFeed').srcObject = null;
+                addLog('⏹️ Camera mati', 'info');
+                updateCameraStatus();
+            }
+        }
+
+        async function cameraZoom(level) {
+            currentZoom = level;
+            if (cameraStream) {
+                const track = cameraStream.getVideoTracks()[0];
+                await track.applyConstraints({ 
+                    advanced: [{ zoom: level }] 
+                });
+            }
+            updateCameraStatus();
+        }
+
+        async function toggleTorch() {
+            if (!cameraStream) {
+                addLog('❌ Aktifkan camera dulu', 'error');
+                return;
+            }
+            
+            const track = cameraStream.getVideoTracks()[0];
+            if (track.getCapabilities().torch) {
+                torchState = !torchState;
+                await track.applyConstraints({ 
+                    advanced: [{ torch: torchState }] 
+                });
+                document.getElementById('torchBtn').innerHTML = torchState ? '🔦 ON' : '🔦 TORCH';
+                addLog(`🔦 Torch ${torchState ? 'ON' : 'OFF'}`, 'success');
+            }
+        }
+
+        function toggleMirror() {
+            mirrorMode = !mirrorMode;
+            const video = document.getElementById('cameraFeed');
+            video.style.transform = mirrorMode ? 'scaleX(-1)' : 'none';
+            addLog(`🪞 Mirror ${mirrorMode ? 'ON' : 'OFF'}`, 'info');
+        }
+
+        function capturePhoto() {
+            if (!cameraStream) { addLog('❌ Aktifkan camera dulu', 'error'); return; }
+            
+            const video = document.getElementById('cameraFeed');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            const link = document.createElement('a');
+            link.download = `foto_${Date.now()}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+            addLog('📸 Foto tersimpan!', 'success');
+        }
+
+        function setTimer() {
+            addLog('⏱️ Timer 3 detik...', 'info');
+            setTimeout(() => {
+                capturePhoto();
+                addLog('📸 Foto timer!', 'success');
+            }, 3000);
+        }
+
+        function updateCameraStatus() {
+            document.getElementById('cameraStatus').innerHTML = 
+                `Camera: ${cameraStream ? 'Active' : 'Off'} | Zoom: ${currentZoom}x | Mirror: ${mirrorMode ? 'ON' : 'OFF'}`;
+        }
+
+        // ==================== OVERLAY ====================
+        function showOverlay() {
+            const text = document.getElementById('overlayText').value || 'SURXRAT';
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: #ff0066; color: white; padding: 30px 50px; border-radius: 20px;
+                font-size: 36px; font-weight: bold; border: 4px solid #00ff9d; z-index: 9999;
+            `;
+            overlay.textContent = text;
+            document.getElementById('overlayContainer').appendChild(overlay);
+            setTimeout(() => overlay.remove(), 2000);
+            addLog(`📤 Overlay: "${text}"`, 'success');
+        }
+
+        function showNotification() {
+            const text = document.getElementById('overlayText').value || 'NOTIF';
+            if (Notification.permission === 'granted') {
+                new Notification('SURXRAT', { body: text });
+            } else {
+                Notification.requestPermission();
+            }
+            addLog(`🔔 Notif: "${text}"`, 'info');
+        }
+
+        async function copyToClipboard() {
+            const text = document.getElementById('overlayText').value || 'SURXRAT';
+            await navigator.clipboard.writeText(text);
+            document.getElementById('clipboardInfo').innerHTML = `Clipboard: "${text}"`;
+            addLog(`📋 Copied`, 'success');
+        }
+
+        // ==================== AUDIO PRO ====================
+        function speakText() {
+            const text = document.getElementById('ttsText').value || 'HALO';
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+            addLog(`🔊 "${text}"`, 'success');
+        }
+
+        function playBeep() {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            osc.connect(ctx.destination);
+            osc.frequency.value = 800;
+            osc.start();
+            setTimeout(() => { osc.stop(); ctx.close(); }, 200);
+            addLog('🔊 Beep', 'info');
+        }
+
+        function playAlarm() {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            for (let i = 0; i < 5; i++) {
+                const osc = ctx.createOscillator();
+                osc.connect(ctx.destination);
+                osc.frequency.value = 600 + (i * 100);
+                osc.start(ctx.currentTime + i * 0.3);
+                osc.stop(ctx.currentTime + i * 0.3 + 0.2);
+            }
+            addLog('🚨 Alarm', 'info');
+        }
+
+        function playNotification() {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            osc.connect(ctx.destination);
+            osc.frequency.value = 1000;
+            osc.start();
+            setTimeout(() => osc.stop(), 100);
+            addLog('🔔 Notif sound', 'info');
+        }
+
+        let echoEnabled = false;
+        function toggleEcho() {
+            echoEnabled = !echoEnabled;
+            document.getElementById('echoBtn').innerHTML = echoEnabled ? '🔊 ECHO ON' : '🔊 ECHO';
+            addLog(`🔊 Echo ${echoEnabled ? 'ON' : 'OFF'}`, 'info');
+        }
+
+        function voiceChanger() {
+            const text = document.getElementById('ttsText').value || 'HALO';
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            utterance.pitch = 2.0;
+            utterance.rate = 1.5;
+            window.speechSynthesis.speak(utterance);
+            addLog('🎭 Voice changed!', 'success');
+        }
+
+        // Audio Recording
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let lastAudioBlob = null;
+
+        async function startRecording() {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+            mediaRecorder.onstop = () => {
+                lastAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const url = URL.createObjectURL(lastAudioBlob);
+                document.getElementById('audioPlayer').src = url;
+                document.getElementById('audioPlayer').style.display = 'block';
+                addLog('✅ Rekaman selesai', 'success');
+            };
+            mediaRecorder.start();
+            addLog('🔴 Merekam...', 'info');
+        }
+
+        function stopRecording() {
+            if (mediaRecorder) mediaRecorder.stop();
+        }
+
+        function playLastAudio() {
+            document.getElementById('audioPlayer').play();
+        }
+
+        // Speech Recognition
+        let recognition = null;
+        function startSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'id-ID';
+            recognition.onresult = (e) => {
+                const text = e.results[e.results.length-1][0].transcript;
+                document.getElementById('speechResult').innerHTML = `🎤 "${text}"`;
+                addLog(`🎤 Speech: "${text}"`, 'success');
+            };
+            recognition.start();
+        }
+
+        function stopSpeechRecognition() {
+            if (recognition) recognition.stop();
+        }
+
+        // ==================== TOOLS PRO ====================
+        let compassWatch = null;
+        let altimeterWatch = null;
+
+        function startCompass() {
+            if (window.DeviceOrientationEvent) {
+                compassWatch = (e) => {
+                    const alpha = e.alpha || 0;
+                    document.getElementById('sensorData').innerHTML = 
+                        `Compass: ${alpha.toFixed(1)}° | Altitude: - m`;
+                };
+                window.addEventListener('deviceorientation', compassWatch);
+                addLog('🧭 Compass started', 'success');
+            }
+        }
+
+        function stopCompass() {
+            if (compassWatch) {
+                window.removeEventListener('deviceorientation', compassWatch);
+                compassWatch = null;
+                addLog('⏹️ Compass stopped', 'info');
+            }
+        }
+
+        function startAltimeter() {
+            if (window.DeviceMotionEvent) {
+                altimeterWatch = (e) => {
+                    if (e.acceleration) {
+                        addLog('📈 Altitude data', 'info');
+                    }
+                };
+                window.addEventListener('devicemotion', altimeterWatch);
+            }
+        }
+
+        function stopAltimeter() {
+            if (altimeterWatch) {
+                window.removeEventListener('devicemotion', altimeterWatch);
+                altimeterWatch = null;
+            }
+        }
+
+        // Location
+        let locationWatch = null;
+
+        function getLocation() {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    const maps = `https://www.google.com/maps?q=${lat},${lng}`;
+                    document.getElementById('locationResult').innerHTML = 
+                        `📍 ${lat}, ${lng}<br><a href="${maps}" target="_blank" style="color:#ff0066;">Buka Maps</a>`;
+                }
+            );
+        }
+
+        function startLiveLocation() {
+            locationWatch = navigator.geolocation.watchPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude.toFixed(6);
+                    const lng = pos.coords.longitude.toFixed(6);
+                    document.getElementById('locationResult').innerHTML = `📍 Live: ${lat}, ${lng}`;
+                }
+            );
+        }
+
+        function stopLiveLocation() {
+            if (locationWatch) navigator.geolocation.clearWatch(locationWatch);
+        }
+
+        // Flashlight
+        let flashStream = null;
+        let blinkInterval = null;
+
+        async function flashlightOn() {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment' }
+            });
+            const track = stream.getVideoTracks()[0];
+            if (track.getCapabilities().torch) {
+                await track.applyConstraints({ advanced: [{ torch: true }] });
+                flashStream = stream;
+                addLog('🔦 Flash ON', 'success');
+            }
+        }
+
+        function flashlightOff() {
+            if (blinkInterval) clearInterval(blinkInterval);
+            if (flashStream) {
+                flashStream.getTracks().forEach(t => t.stop());
+                flashStream = null;
+                addLog('🔦 Flash OFF', 'info');
+            }
+        }
+
+        function flashlightBlink() {
+            if (blinkInterval) {
+                clearInterval(blinkInterval);
+                blinkInterval = null;
+                flashlightOff();
+                document.getElementById('blinkBtn').innerHTML = '✨ BLINK';
+                document.getElementById('toolsBlinkBtn').innerHTML = '✨ BLINK';
+                return;
+            }
+            
+            flashlightOn().then(() => {
+                if (flashStream) {
+                    const track = flashStream.getVideoTracks()[0];
+                    let state = false;
+                    blinkInterval = setInterval(async () => {
+                        state = !state;
+                        await track.applyConstraints({ advanced: [{ torch: state }] });
+                    }, 500);
+                    document.getElementById('blinkBtn').innerHTML = '⏹️ STOP';
+                    document.getElementById('toolsBlinkBtn').innerHTML = '⏹️ STOP';
+                    addLog('✨ Blink active', 'success');
+                }
+            });
+        }
+
+        // Vibrate
+        function vibratePattern() {
+            if (navigator.vibrate) {
+                navigator.vibrate([500, 200, 500]);
+                addLog('📳 Vibrate', 'success');
+            }
+        }
+
+        // ==================== DEVICE ====================
+        function refreshDeviceInfo() {
+            // Battery
+            if (navigator.getBattery) {
+                navigator.getBattery().then(b => {
+                    document.getElementById('batteryLevel').innerHTML = Math.round(b.level * 100) + '%';
+                    document.getElementById('batteryCharging').innerHTML = b.charging ? 'Yes ⚡' : 'No';
+                });
+            }
+            
+            document.getElementById('onlineStatus').innerHTML = navigator.onLine ? 'Online' : 'Offline';
+            
+            const conn = navigator.connection;
+            if (conn) document.getElementById('networkType').innerHTML = conn.effectiveType;
+            
+            document.getElementById('platform').innerHTML = navigator.platform;
+            document.getElementById('screenSize').innerHTML = `${screen.width}x${screen.height}`;
+            document.getElementById('orientation').innerHTML = screen.orientation?.type || '-';
+            
+            // RAM (approximation)
+            if (navigator.deviceMemory) {
+                document.getElementById('ramInfo').innerHTML = navigator.deviceMemory + ' GB';
+            }
+            
+            addLog('📱 Device info updated', 'info');
+        }
+
+        async function getPublicIP() {
+            const res = await fetch('https://api.ipify.org?format=json');
+            const data = await res.json();
+            addLog(`🌐 IP: ${data.ip}`, 'success');
+        }
+
+        function getDeviceSpecs() {
+            addLog('📊 Device specs requested', 'info');
+            refreshDeviceInfo();
+        }
+
+        // ==================== QR ====================
+        function generateQR() {
+            const text = document.getElementById('qrText').value || 'SURXRAT';
+            const container = document.getElementById('qrContainer');
+            container.innerHTML = '';
+            QRCode.toCanvas(document.createElement('canvas'), text, { width: 200 }, (err, canvas) => {
+                if (err) return;
+                container.appendChild(canvas);
+                addLog(`✅ QR generated`, 'success');
+            });
+        }
+
+        function downloadQR() {
+            const canvas = document.querySelector('#qrContainer canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'qrcode.png';
+                link.href = canvas.toDataURL();
+                link.click();
+                addLog('💾 QR downloaded', 'success');
+            }
+        }
+
+        function clearQR() {
+            document.getElementById('qrContainer').innerHTML = '';
+        }
+
+        // ==================== INIT ====================
+        window.onload = function() {
+            addLog('╔════════════════════════════╗');
+            addLog('║ SURXRAT FINAL - NEW EDITION ║');
+            addLog('╚════════════════════════════╝');
+            addLog('🔥 40+ Fitur - 100% Mobile', 'success');
+            refreshDeviceInfo();
+        };
+    </script>
+</body>
+</html>
